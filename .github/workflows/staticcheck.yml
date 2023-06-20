@@ -17,4 +17,4 @@ jobs:
         pip install mypy
     - name: mypy
       run: |
-        mypy D:\in28mins_Repo\devops-master-class\projects\hello-world\hello-world-python\
+        mypy D:/in28mins_Repo/devops-master-class/projects/hello-world/hello-world-python/
