@@ -1,20 +1,17 @@
-name: Static Checker
-
+name: Checks
 on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Mypy
+    name: Checks
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
       with:
-        python-version: 3.8
-    - name: Install Dependencies
-      run: |
-        pip install mypy
-    - name: mypy
-      run: |
-        mypy ./
+        python-version: 3.x
+    - run: pip install --upgrade pip
+    - run: pip install "black<23" pylint==v3.0.0a3 mypy==v0.902
+    - run: black --diff --check $(git ls-files '*.py')
+    - run: pylint --disable=all --enable=unused-import $(git ls-files '*.py')
+    - run: mypy --strict $(git ls-files '*.py')
