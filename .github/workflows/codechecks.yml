@@ -30,12 +30,17 @@ jobs:
     - name: Set up C and C++
       run: sudo apt-get install build-essential
       
-    - name: Compile and check C code
+    - name: Compile and check C/C++ code
       run: |
-        gcc -o my_c_program ./
-        ./my_c_program
-        
-    - name: Compile and check C++ code
-      run: |
-        g++ -o my_cpp_program ./
-        ./my_cpp_program
+        find . \( -name "*.c" -o -name "*.cpp" \) -type f -print0 | while IFS= read -r -d '' file; do
+          extension="${file##*.}"
+          filename="${file%.*}"
+          
+          if [[ "$extension" == "c" ]]; then
+            gcc -o "$filename" "$file"
+          elif [[ "$extension" == "cpp" ]]; then
+            g++ -o "$filename" "$file"
+          fi
+          
+          "./$filename"
+        done
