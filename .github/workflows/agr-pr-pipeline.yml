@@ -1,5 +1,4 @@
 name: AGR-PR-pipeline
-	
 	on:
 	  workflow_call:
 	    inputs:
