@@ -32,10 +32,10 @@ jobs:
       
     - name: Compile and check C code
       run: |
-        gcc -o my_c_program my_c_code.c
+        gcc -o my_c_program ./
         ./my_c_program
         
     - name: Compile and check C++ code
       run: |
-        g++ -o my_cpp_program my_cpp_code.cpp
+        g++ -o my_cpp_program ./
         ./my_cpp_program
