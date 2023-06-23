@@ -25,7 +25,7 @@ jobs:
         
     - name: Python type checking
       run: |
-        mypy --ignore-missing-imports .
+        mypy --strict ./
         
     - name: Set up C and C++
       run: sudo apt-get install build-essential
