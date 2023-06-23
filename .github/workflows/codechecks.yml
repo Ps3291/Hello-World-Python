@@ -1,0 +1,41 @@
+name: Code Checks
+on: [push, pull_request]
+
+jobs:
+  check-code:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 mypy
+        
+    - name: Python code linting
+      run: |
+        flake8 --exclude=venv*,.venv*
+        
+    - name: Python type checking
+      run: |
+        mypy --ignore-missing-imports .
+        
+    - name: Set up C and C++
+      run: sudo apt-get install build-essential
+      
+    - name: Compile and check C code
+      run: |
+        gcc -o my_c_program my_c_code.c
+        ./my_c_program
+        
+    - name: Compile and check C++ code
+      run: |
+        g++ -o my_cpp_program my_cpp_code.cpp
+        ./my_cpp_program
