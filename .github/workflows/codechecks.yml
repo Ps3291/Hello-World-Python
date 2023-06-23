@@ -9,30 +9,24 @@ jobs:
     
     steps:
     - name: Check out code
-      id: checkout
       uses: actions/checkout@v2
       
     - name: Set up Python and install dependencies
-      id: python-checks
       uses: actions/setup-python@v2
       with:
         python-version: 3.x
-        run: |
-         python -m pip install --upgrade pip
-         pip install flake8 mypy
         
-         # Python code linting
-         flake8 --exclude=venv*,.venv*
+    - name: Python code linting and type checking
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 mypy
         
-         # Python type checking
-         mypy --strict ./
+        flake8 --exclude=venv*,.venv*
+        mypy --strict ./
         
     - name: Set up C and C++ and compile code
-      id: c-cpp-checks
       run: |
         sudo apt-get install build-essential
-        
-        # Compile and check C/C++ code
         find . \( -name "*.c" -o -name "*.cpp" \) -type f -print0 | while IFS= read -r -d '' file; do
           extension="${file##*.}"
           filename="${file%.*}"
