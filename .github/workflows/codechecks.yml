@@ -1,5 +1,7 @@
 name: Code Checks
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 jobs:
   check-code:
@@ -7,31 +9,30 @@ jobs:
     
     steps:
     - name: Check out code
+      id: checkout
       uses: actions/checkout@v2
       
-    - name: Set up Python
+    - name: Set up Python and install dependencies
+      id: python-checks
       uses: actions/setup-python@v2
       with:
         python-version: 3.x
+        run: |
+         python -m pip install --upgrade pip
+         pip install flake8 mypy
         
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 mypy
+         # Python code linting
+         flake8 --exclude=venv*,.venv*
         
-    - name: Python code linting
-      run: |
-        flake8 --exclude=venv*,.venv*
+         # Python type checking
+         mypy --strict ./
         
-    - name: Python type checking
+    - name: Set up C and C++ and compile code
+      id: c-cpp-checks
       run: |
-        mypy --strict ./
+        sudo apt-get install build-essential
         
-    - name: Set up C and C++
-      run: sudo apt-get install build-essential
-      
-    - name: Compile and check C/C++ code
-      run: |
+        # Compile and check C/C++ code
         find . \( -name "*.c" -o -name "*.cpp" \) -type f -print0 | while IFS= read -r -d '' file; do
           extension="${file##*.}"
           filename="${file%.*}"
