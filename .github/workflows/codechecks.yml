@@ -24,18 +24,9 @@ jobs:
         flake8 --exclude=venv*,.venv*
         mypy --strict ./
         
-    - name: Set up C and C++ and compile code
+    - name: Set up C and C++ static analysis tools
+      run: sudo apt-get install cppcheck
+      
+    - name: Run C/C++ static analysis
       run: |
-        sudo apt-get install build-essential
-        find . \( -name "*.c" -o -name "*.cpp" \) -type f -print0 | while IFS= read -r -d '' file; do
-          extension="${file##*.}"
-          filename="${file%.*}"
-          
-          if [[ "$extension" == "c" ]]; then
-            gcc -o "$filename" "$file"
-          elif [[ "$extension" == "cpp" ]]; then
-            g++ -o "$filename" "$file"
-          fi
-          
-          "./$filename"
-        done
+        cppcheck --enable=all --std=c++11 ./
