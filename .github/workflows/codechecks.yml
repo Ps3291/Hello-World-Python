@@ -25,8 +25,10 @@ jobs:
         mypy --strict ./
         
     - name: Set up C and C++ static analysis tools
-      run: sudo apt-get install cppcheck
+      run: sudo apt-get install clang clang-tools
       
     - name: Run C/C++ static analysis
       run: |
-        cppcheck --enable=all --std=c++11 ./
+        find . \( -name "*.c" -o -name "*.cpp" \) -type f -print0 | while IFS= read -r -d '' file; do
+          clang-tidy "$file"
+        done
